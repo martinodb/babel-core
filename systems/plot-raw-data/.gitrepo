@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = gitlab@gitlab.ai.vub.ac.be:ehai/plot-raw-data.git
+	branch = master
+	commit = 9bc03bd55e436e79e8c6278404e5c5e59bb1e16d
+	parent = e9dc721d26aa44aa71dfdcf30a912933f8f1ded2
+	method = merge
+	cmdver = 0.4.0
