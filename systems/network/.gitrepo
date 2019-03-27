@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = gitlab@gitlab.ai.vub.ac.be:ehai/network.git
+	branch = master
+	commit = 2a9bc0d1a825c5af3428273ff37c7306ab76f621
+	parent = abc18f640c13f5c58d080a0b853c1de810ff432d
+	method = merge
+	cmdver = 0.4.0
