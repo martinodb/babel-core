@@ -1,0 +1,16 @@
+*********************************	************************************************************************
+LIBRARIES							LICENSES
+*********************************	************************************************************************
+cl-google-charts					FreeBSD License
+cl-json							MIT License
+cldoc							GNU LGPL License
+graph-utils						LLGPL
+gtfl_0.1.3						BSD-style license
+local-time						BSD-style license
+lw-add-ons-0.10.3					BSD-style license
+lw-compat						MIT License
+lw-doc-0.3.6						FreeBSD License
+s-dot-1_2						Modified BSD License
+slime-extensions					Created by the group, no license on it, present in the previous release
+snooze							LLGPL License
+stanford-postagger-2016-10-31				GNU GPL
