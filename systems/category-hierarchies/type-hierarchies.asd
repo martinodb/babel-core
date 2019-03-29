@@ -14,7 +14,7 @@
 ;;=========================================================================
 (in-package :asdf)
 
-(defsystem :type-hierarchies
+(defsystem :category-hierarchies
   :description "General support for using type-hierarchies in
   FCG."
   :depends-on (:fcg :graph-utils)
