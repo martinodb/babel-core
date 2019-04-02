@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = https://github.com/SonyCSLParis/fcg-hybrids.git
+	branch = master
+	commit = be0aa7e9284606b328da2a4f32788df7489e770c
+	parent = a15e85ca715b279d53125dd938d0fdae9c30f6c6
+	method = merge
+	cmdver = 0.4.0
