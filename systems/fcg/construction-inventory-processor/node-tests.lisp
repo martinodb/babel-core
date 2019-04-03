@@ -247,7 +247,7 @@
            ;; 2/ Infer the word order constraints.
            (word-order-constraints (set-difference
                                     ;; Get all the ordering constraints as if we were de-rendering.
-                                    (infer-all-constraints-from-boundaries updated-boundaries form-predicates)
+                                    (infer-all-constraints-from-boundaries updated-boundaries form-predicates unit-structure)
                                     ;; But remove the ones we already moved out of the root-unit.
                                     constraints-already-removed-from-root :test #'unify))
 
@@ -298,7 +298,7 @@
            ;; 2/ Infer the word order constraints.
            (word-order-constraints (set-difference
                                     ;; Get all the ordering constraints as if we were de-rendering.
-                                    (infer-all-constraints-from-boundaries updated-boundaries form-predicates)
+                                    (infer-all-constraints-from-boundaries updated-boundaries form-predicates unit-structure)
                                     ;; But remove the ones we already moved out of the root-unit.
                                     constraints-already-removed-from-root :test #'unify))
 

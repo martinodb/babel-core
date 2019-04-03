@@ -583,6 +583,11 @@ branching node."
                                      lst)))))
     (substitute-or-cons new-entry scoped-constraints)))
 
+(defmethod order-units-locally (constraint scoped-constraints (predicate (eql 'before)))
+  ;; Treat the constraint as a precedes constraint.
+  (declare (ignore predicate))
+  (order-units-locally constraint scoped-constraints 'precedes))
+
 (defmethod order-units-locally (constraint scoped-constraints (predicate (eql 'meets)))
   "Meets constraints make a local chain."
   (let* ((parent (fourth constraint))
@@ -779,6 +784,10 @@ branching node."
 
 (defmethod find-scope (constraint (constraint-name (eql 'precedes)))
   ;; (precedes det n NP)
+  (last-elt constraint))
+
+(defmethod find-scope (constraint (constraint-name (eql 'before)))
+  ;; (before NP VP S)
   (last-elt constraint))
 
 (defmethod find-scope (constraint (constraint-name (eql 'first)))

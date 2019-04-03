@@ -19,7 +19,7 @@
 ;; de-render
 ;; ############################################################################
 
-(export '(footprints meaning sem-cat form syn-cat boundaries))
+(export '(footprints meaning sem-cat form syn-cat boundaries before))
 
 (defmethod de-render ((utterance t) (mode t) &key &allow-other-keys)
   "Default de-render mode: call de-render-with-scope."
@@ -133,9 +133,9 @@
               `(string ,unit-name ,string) form-constraints)))
     
     ;; 2. Now we add all the relevant word ordering constraints to the form-constraints.
-    (setf word-boundaries (reverse word-boundaries))
-    (setf form-constraints
-          (infer-all-constraints-from-boundaries word-boundaries form-predicates form-constraints))
+    (setf word-boundaries (reverse word-boundaries)
+          form-constraints
+          (append (infer-all-constraints-from-boundaries word-boundaries form-predicates nil) form-constraints))
     
     ;; 3. Finally build a transient structure, set its data, and return it.
     (let ((transient-structure
@@ -148,7 +148,7 @@
                                              
                                              (syn-cat ())))
                           :right-pole '((root)))))
-      (set-data transient-structure :sequence (reverse sequence)) ;; Is this still necessary?
+      (set-data transient-structure :sequence (reverse sequence))
       transient-structure)))
 
 (export '(get-updating-references
@@ -195,9 +195,9 @@
       (get-all-constraints sorted-boundaries nil))))
 
 ;; Generic function and its methods
-(defgeneric handle-form-predicate-in-de-render (list-of-boundaries predicate))
+(defgeneric handle-form-predicate-in-de-render (list-of-boundaries predicate &optional unit-structure))
 
-(defmethod handle-form-predicate-in-de-render ((list-of-boundaries list) (predicate t))
+(defmethod handle-form-predicate-in-de-render ((list-of-boundaries list) (predicate t) &optional unit-structure)
   ;; To avoid potential symbol-name problems.
   (assert (symbolp predicate))
   (cond
@@ -209,37 +209,54 @@
     (handle-form-predicate-in-de-render list-of-boundaries 'first))
    ((string= predicate 'last)
     (handle-form-predicate-in-de-render list-of-boundaries 'last))
+   ((string= predicate 'before)
+    (handle-form-predicate-in-de-render list-of-boundaries 'before unit-structure))
    (t
     (progn
       (warn "No applicable handle-form-predicate-in-de-render method for the arguments ~a and ~a" list-of-boundaries predicate)
       nil))))
 
-(defmethod handle-form-predicate-in-de-render ((list-of-boundaries list) (predicate (eql 'meets)))
+(defmethod handle-form-predicate-in-de-render ((list-of-boundaries list) (predicate (eql 'meets)) &optional unit-structure)
+  (declare (ignore unit-structure))
   (infer-before-constraints list-of-boundaries predicate #'=))
 
-(defmethod handle-form-predicate-in-de-render ((list-of-boundaries list) (predicate (eql 'precedes)))
+(defmethod handle-form-predicate-in-de-render ((list-of-boundaries list) (predicate (eql 'precedes)) &optional unit-structure)
+  (declare (ignore unit-structure))
   (infer-before-constraints list-of-boundaries predicate #'<=))
 
-(defmethod handle-form-predicate-in-de-render ((list-of-boundaries list) (predicate (eql 'fields)))
+(defmethod handle-form-predicate-in-de-render ((list-of-boundaries list) (predicate (eql 'fields)) &optional unit-structure)
   ;; The FIELDS feature does not provide enough information to make useful
   ;; inferences in comprehension. So we return nothing instead.
-  (declare (ignore list-of-boundaries predicate))
+  (declare (ignore list-of-boundaries predicate unit-structure))
   nil)
 
-(defmethod handle-form-predicate-in-de-render ((list-of-boundaries list) (predicate (eql 'adjacent)))
+(defmethod handle-form-predicate-in-de-render ((list-of-boundaries list) (predicate (eql 'before)) &optional unit-structure)
+  "BEFORE constraints only look at units that have constituents/subunits."
+  ;; Return nothing instead because BEFORE is a structural word order constraint.
+  (let* ((phrasal-units (loop for unit in unit-structure
+                              when (or (assoc 'constituents (unit-body unit) :test #'string=)
+                                       (assoc 'subunits (unit-body unit) :test #'string=))
+                              collect (unit-name unit)))
+         (filtered-boundaries (loop for boundary in list-of-boundaries
+                                    when (member (first boundary) phrasal-units)
+                                    collect boundary)))
+    (infer-before-constraints filtered-boundaries predicate #'<=)))
+
+(defmethod handle-form-predicate-in-de-render ((list-of-boundaries list) (predicate (eql 'adjacent)) &optional unit-structure)
   ;; Provides two predicates for every pair of adjacent units.
   ;; E.g. "the mouse" -> ((adjacent the-unit mouse-unit scope) (adjacent mouse-unit the-unit scope))
+  (declare (ignore unit-structure))
   (let ((adjacent-before-constraints (infer-before-constraints list-of-boundaries predicate #'=)))
     (loop for form-constraint in adjacent-before-constraints
           append `(,form-constraint
                    ,(list predicate (third form-constraint) (second form-constraint) (make-var 'unit))))))
 
-(defmethod handle-form-predicate-in-de-render ((list-of-boundaries list) (predicate (eql 'first)))
-  "Infer FIRST constraints based on SUBUNITS."
-  (let ((units (fcg-get-transient-unit-structure (get-self)))
-        (constraints nil))
-    (dolist (unit units)
-      (let ((subunits (unit-feature-value unit 'subunits)))
+(defmethod handle-form-predicate-in-de-render ((list-of-boundaries list) (predicate (eql 'first)) &optional unit-structure)
+  "Infer FIRST constraints based on SUBUNITS or CONSTITUENTS."
+  (let ((constraints nil))
+    (dolist (unit unit-structure)
+      (let ((subunits (or (unit-feature-value unit 'subunits)
+                          (unit-feature-value unit 'constituents))))
         (when subunits
           (let ((first-unit (caar (sort (remove-if #'(lambda(x)
                                                        (not (member (first x) subunits :test #'string=)))
@@ -249,12 +266,12 @@
               (push `(,predicate ,first-unit ,(unit-name unit)) constraints))))))
     constraints))
 
-(defmethod handle-form-predicate-in-de-render ((list-of-boundaries list) (predicate (eql 'last)))
+(defmethod handle-form-predicate-in-de-render ((list-of-boundaries list) (predicate (eql 'last)) &optional unit-structure)
   "Get the rightmost subunit."
-  (let ((units (fcg-get-transient-unit-structure (get-self)))
-        (constraints nil))
-    (dolist (unit units)
-      (let ((subunits (unit-feature-value unit 'subunits)))
+  (let ((constraints nil))
+    (dolist (unit unit-structure)
+      (let ((subunits (or (unit-feature-value unit 'subunits)
+                          (unit-feature-value unit 'constituents))))
         (when subunits
           (let ((last-unit (caar (sort (remove-if #'(lambda(x)
                                                        (not (member (first x) subunits :test #'string=)))
@@ -264,11 +281,12 @@
               (push `(,predicate ,last-unit ,(unit-name unit)) constraints))))))
     constraints))
 
-(defun infer-all-constraints-from-boundaries (boundaries form-predicates &optional result)
+(defun infer-all-constraints-from-boundaries (boundaries form-predicates &optional unit-structure)
   "Given a list of boundaries, infer its form-predicates."
-  (dolist (predicate form-predicates)
-    (setf result (append result (handle-form-predicate-in-de-render boundaries predicate))))
-  result)
+  (let (result)
+    (dolist (predicate form-predicates)
+      (setf result (append result (handle-form-predicate-in-de-render boundaries predicate unit-structure))))
+    result))
 
 ;; ################# ;;
 ;; Helper functions  ;;
