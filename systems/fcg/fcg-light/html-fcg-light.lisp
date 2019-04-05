@@ -83,7 +83,7 @@ div.empty-contributing-part { padding-left:10px; padding-right:10px;font-size:20
   (let ((feature-type nil))
     (loop for ft in feature-types
           do
-          (when (equal feature-name (first ft))
+          (when (string= feature-name (first ft))
             (setf feature-type (second ft))))
     feature-type))
 
@@ -94,7 +94,7 @@ div.empty-contributing-part { padding-left:10px; padding-right:10px;font-size:20
   (let ((expansion-op nil))
     (loop for ft in feature-types
           do
-          (when (equal feature-name (first ft))
+          (when (string= feature-name (first ft))
             (setf expansion-op (third ft))))
     expansion-op))
 
