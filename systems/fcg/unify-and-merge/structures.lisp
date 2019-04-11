@@ -124,7 +124,7 @@
                         (setq found feature)
                         (setq found (third feature))))))
 	found)
-      (find name (unit-features unit) :key #'feature-name)))
+      (find name (unit-features unit) :key #'feature-name :test #'string=)))
 
 ;; Unreliable function:
 (defun unit-tag-feature (unit feature-name)
