@@ -57,8 +57,8 @@
                                                                     (left-pole-structure
                                                                      base-transient-structure)
                                                                     unit-tree)))))
-         (old-boundaries (fcg::fcg-get-boundaries base-transient-structure))
-         (new-boundaries (fcg::update-list-of-boundaries old-boundaries temp-node))
+         (old-boundaries (fcg-get-boundaries base-transient-structure))
+         (new-boundaries (update-list-of-boundaries old-boundaries temp-node))
          (new-form-constraints (infer-all-constraints-from-boundaries
                                 new-boundaries
                                 (get-updating-references cxn-inventory)
