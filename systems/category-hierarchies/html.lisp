@@ -59,21 +59,19 @@
 
 (defmethod make-html ((type-hierarchy type-hierarchy) &key (weights? nil) (colored-edges-0-1 t) (render-program "dot") &allow-other-keys)
   "generates html code for a type-hierarchy"
-  nil)
-  
-;;;   (let* ((path (type-hierarchy->image type-hierarchy :open nil :format "svg" :weights? weights? :colored-edges-0-1 colored-edges-0-1 :render-program render-program))
-;;;          (svg (with-open-file (stream path :direction :input) 
-;;;                 (let ((lines nil) (line nil))
-;;;                   (loop do (setf line (read-line stream nil))
-;;;                         ;; skip stuff before <svg  ...
-;;;                         until (and (> (length line) 3) (equal (subseq line 0 4) "<svg")))
-;;;                   (loop ;; skip comments
-;;;                         do (unless (and (> (length line) 3) (equal (subseq line 0 4) "<!--"))
-;;;                              (push line lines))
-;;;                         (setf line (if (equal line "</svg>")
-;;;                                      nil
-;;;                                      (read-line stream nil)))
-;;;                         while line)
-;;;                   (close stream)
-;;;                   (reduce #'string-append  (reverse lines))))))
-;;;     `((div) ,svg)))
+  (let* ((path (type-hierarchy->image type-hierarchy :open nil :format "svg" :weights? weights? :colored-edges-0-1 colored-edges-0-1 :render-program render-program))
+         (svg (with-open-file (stream path :direction :input) 
+                 (let ((lines nil) (line nil))
+                   (loop do (setf line (read-line stream nil))
+                         ;; skip stuff before <svg  ...
+                         until (and (> (length line) 3) (equal (subseq line 0 4) "<svg")))
+                   (loop ;; skip comments
+                         do (unless (and (> (length line) 3) (equal (subseq line 0 4) "<!--"))
+                              (push line lines))
+                         (setf line (if (equal line "</svg>")
+                                      nil
+                                      (read-line stream nil)))
+                         while line)
+                   (close stream)
+                   (reduce #'string-append  (reverse lines))))))
+     `((div) ,svg)))
