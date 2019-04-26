@@ -29,13 +29,9 @@
         ((and cxn-inventory
               (type-hierarchies::get-type-hierarchy cxn-inventory)
               (symbolp x) (symbolp y)
-              (type-hierarchies::node-p (intern (symbol-name x) :type-hierarchies)
-                                        (type-hierarchies:get-type-hierarchy cxn-inventory))
-              (type-hierarchies::node-p (intern (symbol-name y) :type-hierarchies)
-                                        (type-hierarchies:get-type-hierarchy cxn-inventory))
-              (type-hierarchies::directed-path-p (intern (symbol-name y) :type-hierarchies)
-                                                 (intern (symbol-name x) :type-hierarchies)
-                                                 (type-hierarchies:get-type-hierarchy cxn-inventory))
+              (type-hierarchies::node-p x (type-hierarchies:get-type-hierarchy cxn-inventory))
+              (type-hierarchies::node-p y (type-hierarchies:get-type-hierarchy cxn-inventory))
+              (type-hierarchies::directed-path-p y x (type-hierarchies:get-type-hierarchy cxn-inventory))
               bindings))
 	;; unify variables
 	((variable-p x) (unify-variable x y bindings))

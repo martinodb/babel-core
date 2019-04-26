@@ -48,6 +48,7 @@
                                                   &optional (cxn-inventory *fcg-constructions*))
   "When the tree is translated, update the boundaries and form constraints."
   (let* ((strings (fcg-extract-selected-form-constraints base-transient-structure '(string)))
+         ;; Temporary cip-node is necessary to be able to reuse the normal fcg processing functions.
          (temp-node (make-instance 'cip-node
                                    :construction-inventory cxn-inventory
                                    :car (make-cxn-application-result

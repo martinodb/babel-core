@@ -67,8 +67,9 @@
                                     collect (make-unit :name (word-dependency-spec-unit-name word-spec)
                                                        :features `((parent ,parent)
                                                                    (subunits ,subunits)
-                                                                   (form ((string ,(word-dependency-spec-unit-name word-spec)
-                                                                                  ,(word-dependency-spec-string word-spec))))
+                                                                   (form ((string
+                                                                           ,(word-dependency-spec-unit-name word-spec)
+                                                                           ,(word-dependency-spec-string word-spec))))
                                                                    (dependency
                                                                     ((pos-tag
                                                                       ,(intern (upcase (word-dependency-spec-pos-tag word-spec)) :fcg))
