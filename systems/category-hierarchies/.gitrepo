@@ -6,7 +6,7 @@
 [subrepo]
 	remote = gitlab@gitlab.ai.vub.ac.be:rvantrijp/category-hierarchies.git
 	branch = master
-	commit = aedefd25b891adf79cf6f07c3bc1c3664a6c577d
+	commit = 10fb8df8db3452ce540bdc4f84838aed08a04bb5
 	parent = c1318cc5b99863d52227e9890c00f3d1338bc514
 	method = merge
 	cmdver = 0.4.0

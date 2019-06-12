@@ -19,6 +19,7 @@
           fcg-construction-set-with-type-hierarchy
           add-category add-categories add-link
           get-type-hierarchy
+          set-type-hierarchy
           directed-path-p
           node-p
           coherence))
@@ -51,7 +52,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defmethod copy-object-content ((source type-hierarchy) (destination type-hierarchy))
-  (setf (graph destination) (graph source)))
+  (setf (graph destination) (copy-graph (graph source))))
 
 (defgeneric add-category (category type-hierarchy))
 (defmethod add-category ((category symbol) (type-hierarchy type-hierarchy))
@@ -147,6 +148,10 @@
   "Returns the type-hierarchy of cxn-inventory or nil if there is no such slot"
   (when (field? (blackboard cxn-inventory) :type-hierarchy)
     (get-data (blackboard cxn-inventory) :type-hierarchy)))
+
+(defun set-type-hierarchy (cxn-inventory type-hierarchy)
+  "Returns the type-hierarchy of cxn-inventory or nil if there is no such slot"
+  (set-data (blackboard cxn-inventory) :type-hierarchy type-hierarchy))
 
 (defgeneric undirected-path (node1 node-2 type-hierarchy))
 (defmethod undirected-path ((n1 integer) (n2 integer) (type-hierarchy type-hierarchy))
