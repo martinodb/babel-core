@@ -4,7 +4,7 @@
 ; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
 ;
 [subrepo]
-	remote = https://gitlab.ai.vub.ac.be/rvantrijp/category-hierarchies.git
+	remote = gitlab@gitlab.ai.vub.ac.be/rvantrijp/category-hierarchies.git
 	branch = master
 	commit = aedefd25b891adf79cf6f07c3bc1c3664a6c577d
 	parent = c1318cc5b99863d52227e9890c00f3d1338bc514
