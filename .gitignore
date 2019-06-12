@@ -1,6 +1,7 @@
 ### Common Lisp ###
 *.FASL
 *.fasl
+*.xfasl
 *.lisp-temp
 *.dfsl
 *.pfsl
