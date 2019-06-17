@@ -6,7 +6,7 @@
 [subrepo]
 	remote = gitlab@gitlab.ai.vub.ac.be:ehai/action-behavior-framework.git
 	branch = master
-	commit = 9967c058aca6acb06a13e8fd9ff5b62cd71c0ddb
-	parent = ab63235197954200e79c189f7e4eeb3bfefe2d0f
+	commit = 6941169a6937fd44c6c1769528d2a3ebd03fc0d2
+	parent = c4c1aa0c52c53423aff04998bf1e0949d0d4e0c5
 	cmdver = 0.4.0
 	method = merge
