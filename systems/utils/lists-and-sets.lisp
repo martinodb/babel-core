@@ -270,7 +270,8 @@ nil."
           collect-ignore-nils
           remove-first
           remove-nth
-          cartesian-product))
+          cartesian-product
+          group-by))
 
 (defun insert-after (lst index newelt)
   "Insert an elt into a list after a certain position."
@@ -535,6 +536,25 @@ element for which the sought value satisfies the test"
          (sublist-position lst1 (rest lst2) :n (1+ n) :test test :key key))))
 ;; (sublist-position '(c d) '(a b c d))
 ;; ==> 2
+
+(defun group-by (sequence fn &key (test #'eql))
+  "applies fn to each elem of sequence. the elems for which fn
+   yields the same value are grouped together. use :test to
+   compare the results of applying fn to each elem."
+  (loop with result = nil
+        for elem in sequence
+        for key = (funcall fn elem)
+        if (assoc key result :test test)
+        do (push elem (cdr (assoc key result :test test)))
+        else
+        do (push (cons key (list elem)) result)
+        finally
+        (return result)))
+
+;; (group-by '((3) (1 2) (1) (1 3) (2) (1 2 3) (2 3)) #'length :test #'=)
+;; ==> ((3 (1 2 3))
+;;      (2 (2 3) (1 3) (1 2))
+;;      (1 (2) (1) (3)))
 
    
 ;; ############################################################################
