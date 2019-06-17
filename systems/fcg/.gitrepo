@@ -6,7 +6,7 @@
 [subrepo]
 	remote = gitlab@gitlab.ai.vub.ac.be:ehai/fcg.git
 	branch = master
-	commit = 36fa39aaf8651ff96630ef11e4b8afca7f103feb
-	parent = c2d35413254e7df024f17a754ceb74beb33cdc99
+	commit = bd913b54b1b58dd1c49e940089f1b4d7e6cd3dcb
+	parent = 03cf639e4a481c6f5cd1f94d553aba08ed2b6d9c
 	method = merge
 	cmdver = 0.4.0
