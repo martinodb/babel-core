@@ -6,7 +6,7 @@
 [subrepo]
 	remote = gitlab@gitlab.ai.vub.ac.be:ehai/meta-layer-learning.git
 	branch = master
-	commit = 1abd13c3ec58269005b6b9cbecdf6eb6b770f0f9
-	parent = cac90f79e277b072c2bc8deb40fa899a30ad025c
+	commit = aaab2014e7fe5aa4a53a8716317309337df040ed
+	parent = 01a06267f4329bde3329c377ec3c4a24a8ea3102
 	cmdver = 0.4.0
 	method = merge
