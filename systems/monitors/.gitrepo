@@ -6,7 +6,7 @@
 [subrepo]
 	remote = gitlab@gitlab.ai.vub.ac.be:ehai/monitors.git
 	branch = master
-	commit = 099907e20994cffb3f15fb5a3d5a8923de7dbd1a
-	parent = 54fc00f762764e6f747398f4d886afc84cbec005
+	commit = e46e210d73a358202c32fb552d46eb666af6bfc5
+	parent = 93f3423ac0b1485252e49b092679f203f84d50c8
 	method = merge
 	cmdver = 0.4.0
