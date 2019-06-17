@@ -6,7 +6,7 @@
 [subrepo]
 	remote = gitlab@gitlab.ai.vub.ac.be:ehai/web-interface.git
 	branch = master
-	commit = 6fbac2a03146db52933bf145228c5b6c93ec15ec
-	parent = 243733a86fb232b6551a9702241d9b1f396c35cd
+	commit = f6db61149e02a532e0bde8df8152deee5140ee66
+	parent = 33bee97ceb0ac975681cdcec0d346e336b2b33c5
 	method = merge
 	cmdver = 0.4.0
