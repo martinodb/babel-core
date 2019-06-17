@@ -6,7 +6,7 @@
 [subrepo]
 	remote = gitlab@gitlab.ai.vub.ac.be:ehai/tasks-and-processes.git
 	branch = master
-	commit = 6d0b5df960d18e1859e18f962394ccd17c97b322
-	parent = 44dd20c21a47dddb6634ca4db95e5a4568dfc970
+	commit = 25d03257441e1b39e494b1d213680e2076a439c1
+	parent = 14d3a12b5b3dbba2674222e2b09b452542226146
 	method = merge
 	cmdver = 0.4.0
