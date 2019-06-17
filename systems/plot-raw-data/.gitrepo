@@ -6,7 +6,7 @@
 [subrepo]
 	remote = gitlab@gitlab.ai.vub.ac.be:ehai/plot-raw-data.git
 	branch = master
-	commit = 3560c8031269eb0d053d54fceeef21c86ca20eff
-	parent = e9dc721d26aa44aa71dfdcf30a912933f8f1ded2
+	commit = f4be719bfe5ec69589db441f9215f8f4769d793f
+	parent = 75f4c11c5a26d90670e916ab4257c30a3305f2aa
 	method = merge
 	cmdver = 0.4.0
