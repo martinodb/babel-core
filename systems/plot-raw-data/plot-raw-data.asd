@@ -24,4 +24,5 @@
      (:file "gnuplot-utils")
      (:file "evo-plots")
      (:file "bar-plots")
-     (:file "blackboard-plots")))
+     (:file "blackboard-plots")
+     (:file "function-plots")))

@@ -299,7 +299,7 @@ x-axis."
 		  (if points
 		      "with points 3"
 		      (format nil "with lines lw ~a" line-width))
-                    (+ 2 (mod source-number 8)) color
+                  (+ 2 (mod source-number 8)) color
                   (< source-number (- (length data) 1))))
 
     (when (member :filled error-bar-modes)
