@@ -75,10 +75,10 @@
   (let* ((string-constraints (remove-if-not #'stringp form-constraints :key #'third))
          (ordering-constraints (filter-by-string-constraints (remove-if #'stringp form-constraints :key #'third)
                                                              string-constraints))
-        (queue (list (make-instance 'render-state
-                                    :used-string-constraints nil
-                                    :remaining-string-constraints (shuffle string-constraints)
-                                    :ordering-constraints ordering-constraints))))
+         (queue (list (make-instance 'render-state
+                                     :used-string-constraints nil
+                                     :remaining-string-constraints (shuffle string-constraints)
+                                     :ordering-constraints ordering-constraints))))
     (loop while queue
           for current-state = (pop queue)
           for all-new-states = (generate-render-states current-state)

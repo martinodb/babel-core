@@ -30,7 +30,11 @@
   (push fix (fixes (problem fix))) ;;we add the current fix to the fixes slot of the problem
   (with-disabled-monitor-notifications
     (set-data fix 'fixed-cars
-              (fcg-apply (get-processing-cxn (restart-data fix)) (car-resulting-cfs (cipn-car node)) (direction (cip node))))))
+              (fcg-apply (get-processing-cxn (restart-data fix))
+                         (car-resulting-cfs (cipn-car node))
+                         (direction (cip node))
+                         :configuration (configuration (construction-inventory node))
+                         :cxn-inventory (construction-inventory node)))))
 
 
 ;; Unknown Words ;;

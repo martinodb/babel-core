@@ -625,10 +625,11 @@ solution."
                do (push (type-of problem) (statuses node)))
          (push 'diagnostic-triggered (statuses node)))
        ;; Loop through the new-fixes (they should have a list of construction-application-results in
-       ;; their data-field 'fixed-cars), make nodes of them, add them as children, and enqueue them 
+       ;; their data-field 'fixed-cars), make nodes of them, add them as children, and enqueue them
+       ;; Note: fixes don't need to have this field, they may also directly affect the CIP
        (loop for fix in new-fixes ;;
-             for fixed-cars = (get-data fix 'fixed-cars)
-             do (loop for fixed-car in fixed-cars
+             when (field? fix 'fixed-cars)
+             do (loop for fixed-car in (get-data fix 'fixed-cars)
                       do
                       (let ((fixed-child (cip-add-child node fixed-car)))
                         (push (type-of (issued-by fix)) (statuses fixed-child))
@@ -642,7 +643,7 @@ solution."
        (when (and (get-configuration cip :use-meta-layer)
                   (get-configuration cip :consolidate-repairs)
                   (repairs node))
-           (consolidate-repair-cxns node))) ;; consolidate repairs!
+           (consolidate-repairs node))) ;; consolidate repairs!
        
      (unless (or (fully-expanded? node) ;;there are other children in the making
                  goal-test-succeeded?) ;;and the node did NOT pass the goal test
@@ -920,13 +921,26 @@ added here. Preprocessing is only used in parsing currently."
      (error (format nil "Add a case for type ~a to #'fcg-get-applied-cxn."
                     (type-of x))))))
 
-(defun consolidate-repair-cxns (node)
-  (let ((applied-cxns (applied-constructions node))
-        (fcg-construction-set (original-cxn-set (construction-inventory node))))
-    (dolist (cxn applied-cxns)
-      (let ((fcg-cxn (get-original-cxn cxn)))
-        (unless (find-cxn fcg-cxn fcg-construction-set)
-          (add-cxn fcg-cxn fcg-construction-set))))))
+(defun consolidate-repairs (node)
+  "conolidate the constructions and th-links added by repairs"
+  ;; fix-cxns field is used by repair
+  (when (field? (car-resulting-cfs (cipn-car node)) :fix-cxns)
+    (loop for cxn in (get-data (car-resulting-cfs (cipn-car node)) :fix-cxns)
+          do (add-cxn cxn (original-cxn-set (construction-inventory node)))))
+  ;; fix-th-links
+  #+:type-hierarchies 
+  (when (field? (car-resulting-cfs (cipn-car node)) :fix-th-links)
+    (loop for th-link in (get-data (car-resulting-cfs (cipn-car node)) :fix-th-links)
+          do (type-hierarchies:add-categories (list (car th-link) (cdr th-link))
+                                              (type-hierarchies:get-type-hierarchy (original-cxn-set (construction-inventory node))))
+          (type-hierarchies:add-link (car th-link) (cdr th-link) 
+                                     (type-hierarchies:get-type-hierarchy (original-cxn-set (construction-inventory node))))))
+  ;; also add all applied cxns
+  (loop with fcg-cxn-set = (original-cxn-set (construction-inventory node))
+        for cxn in (applied-constructions node)
+        for fcg-cxn = (get-original-cxn cxn)
+        unless (find-cxn fcg-cxn fcg-cxn-set)
+        do (add-cxn fcg-cxn fcg-cxn-set)))
 
 (defun solution-p (node)
   "returns true if a node is a solution (succeeded)"

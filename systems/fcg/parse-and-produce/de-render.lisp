@@ -102,7 +102,7 @@
     (make-instance 'coupled-feature-structure 
 		   :left-pole `((root (meaning ())
                                       (sem-cat ())
-                                      (form ,(append strings constraints))
+                                      (form ,(append (reverse strings) constraints))
                                       (syn-cat ())))
 		   :right-pole '((root)))))
 
