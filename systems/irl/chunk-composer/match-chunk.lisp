@@ -148,6 +148,13 @@
       (when (string= v1 v2)
         frame))
 
+(defmethod find-map-function ((v1 number) (v2 number) 
+                        &optional (frame (make-map-frame))
+                        &key (extension-test #'function-frame))
+  (declare (ignore extension-test))
+      (when (= v1 v2)
+        frame))
+
 
 
 ;; ############################################################################

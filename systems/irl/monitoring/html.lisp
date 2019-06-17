@@ -283,7 +283,6 @@ div.ipen > div > div.ipen-details:last-child { margin-bottom:-15px; }
     (bad-node . "#500")
     (solution . "#050")))
 
-
 (defun irl-program-evaluation-node->title (node)
   (cond
     ((eq (status node) 'initial)
@@ -296,8 +295,7 @@ div.ipen > div > div.ipen-details:last-child { margin-bottom:-15px; }
      (if (primitives-evaluated node)
          (format nil "~(~a~)" (caar (primitives-evaluated node)))
          (symbol-name (status node))))
-    (t "UNKNOWN STATUS")
-    ))
+    (t "UNKNOWN STATUS")))
 
 (defun new-binding-p (child-binding parent-node)
   "Check if the value of the binding has changed between parent and child"
@@ -305,7 +303,80 @@ div.ipen > div > div.ipen-details:last-child { margin-bottom:-15px; }
     (if (typep (value child-binding) 'entity)
       (not (equal-entity (value child-binding) (value parent-binding)))
       (not (eql (value child-binding) (value parent-binding))))))
-  
+
+(defmethod make-html ((node irl-program-evaluation-node)
+                      &key (expand/collapse-all-id (make-id 'ipen))
+                      (expand-initially nil))
+  (let* ((element-id (make-id 'ipen))
+         (status (status node))
+         (node-color
+          (or (assqv status *irl-program-evaluation-node-status-colors*)
+              (error "no status color defined for status ~a"  status)))
+         (title-div          
+          `((div :class "ipen-title"
+                 :style ,(mkstr "color:" node-color ";"
+                                (cond ((member status '(initial inconsistent bad-node
+                                                                no-primitives-remaining))
+                                       "font-style:italic")
+                                      ((member status '(solution))
+                                       "font-weight:bold")
+                                      (t ""))))))
+         (title 
+          `((span :style ,(mkstr "color:" node-color)) 
+            ,(irl-program-evaluation-node->title node))))
+    (draw-node-with-children
+     (make-expandable/collapsable-element
+      element-id expand/collapse-all-id
+      ;; collapsed element
+      `((div :class "ipen")
+        (,@title-div
+         ((a ,@(make-expand/collapse-link-parameters element-id t)) ,title)))
+      ;; expanded element
+      (lambda ()
+        (flet ((show-primitives (list title)
+                 (if list
+                   `((div :class "ipen-details") ,title ":&#160;&#160;"
+                     ((br))
+                     ((div :style "display:inline-table;") ,(html-pprint list)))
+                   "")))
+          (let ((expand-status-id (make-id 'ipen)))
+            `((div :class "ipen" :style ,(mkstr "border:1px dotted " node-color))
+              (,@title-div
+               ((a ,@(make-expand/collapse-link-parameters element-id nil))
+                ,title))
+              ((div :style ,(mkstr "border-top:1px dotted " node-color))
+               ((div :class "ipen-details") 
+                ,(make-expand/collapse-all-link 
+                  expand-status-id
+                  (format nil "status: ~a" (downcase status))
+                  "show primitives" "hide primitives"))
+               ,(make-expandable/collapsable-element
+                 (make-id) expand-status-id
+                 `((div))
+                 `((div)
+                   ,(show-primitives (primitives-evaluated node)
+                                     "evaluated primitives")
+                   ,(show-primitives (primitives-remaining node)
+                                     "remaining primitives")
+                   ,(show-primitives (primitives-evaluated-w/o-result node)
+                                     "primitives evaluated w/o result")))
+               ((div :class "ipen-details")                    
+                ((table)
+                 ,@(loop for b in (bindings node)
+                         collect `((tr)
+                                   ((td) ((div :class "binding") ,(html-pprint (var b))))
+                                   ((td) ((div :class "binding")
+                                          ,(if (value b)
+                                             (make-html (value b)
+                                                        :expand-initially expand-initially
+                                                        :expand/collapse-all-id expand/collapse-all-id)
+                                             '((div :class "unbound-value") "unbound")))))))))))))
+      :expand-initially expand-initially)
+     (loop for child in (children node)
+           collect (make-html child :expand/collapse-all-id expand/collapse-all-id))
+     :color "#aaa")))
+
+#|
 (defmethod make-html ((node irl-program-evaluation-node) 
                       &key (expand/collapse-all-id (make-id 'ipen))
                       (expand-initially nil))
@@ -340,9 +411,9 @@ div.ipen > div > div.ipen-details:last-child { margin-bottom:-15px; }
       (lambda ()
         (flet ((show-primitives (list title)
                  (if list
-                     `((div :class "ipen-details") ,title ":&#160;&#160;"
-                       ((div :style "display:inline-table;") ,(html-pprint list)))
-                     "")))
+                   `((div :class "ipen-details") ,title ":&#160;&#160;"
+                     ((div :style "display:inline-table;") ,(html-pprint list)))
+                   "")))
           (let ((status `((span :style ,(mkstr "color:" node-color))
                           ,(format nil "status: ~(~a~)" (status node))))
                 (id (make-id 'ipen))
@@ -390,6 +461,7 @@ div.ipen > div > div.ipen-details:last-child { margin-bottom:-15px; }
      (loop for child in (children node)
         collect (make-html child :expand/collapse-all-id expand/collapse-all-id))
      :color "#aaa")))
+|#
 
 (defmethod make-html ((tree irl-program-evaluator)
                       &key (expand/collapse-all-id (make-id 'ipen))
