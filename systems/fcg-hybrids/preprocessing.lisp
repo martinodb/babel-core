@@ -24,14 +24,23 @@
                                                    cxn-inventory
                                                    (model "en"))
   (assert (stringp utterance))
-  (let ((syntactic-analysis (nlp-tools::get-penelope-dependency-analysis utterance :model model)))
+  (let ((syntactic-analysis (nlp-tools::get-penelope-dependency-analysis utterance :model model))
+        (keys-and-values nil))
     (dolist (step (or preprocessing-steps
                       (get-configuration cxn-inventory :preprocessing-steps-for-dependency-parser)))
-      (setf syntactic-analysis (funcall step syntactic-analysis)))
+      (multiple-value-bind (modified-analysis keyword value)
+          ;; Optionally, a preprocessing step can return a keyword and value to be stored in the
+          ;; transient structure.
+          (funcall step syntactic-analysis)
+        (setf syntactic-analysis modified-analysis)
+        (when keyword (push (list keyword value) keys-and-values))))
     (let* ((utterance-as-list (nlp-tools::dp-build-utterance-as-list-from-dependency-tree syntactic-analysis))
            (basic-transient-structure (de-render utterance-as-list :de-render-with-scope
                                                  :cxn-inventory cxn-inventory)))
-    (values syntactic-analysis utterance-as-list basic-transient-structure))))
+      (loop for key-and-value in keys-and-values
+            do ;; store the information in the transient structure.
+            (set-data (blackboard basic-transient-structure) (first key-and-value) (second key-and-value)))
+      (values syntactic-analysis utterance-as-list basic-transient-structure))))
 
 ;;; Some examples of preprocessing functions working on a dependency analysis.
 ;;; -------------------------------------------------------------------------------------
@@ -101,6 +110,7 @@
         unless  (find (second ne-result) (list "CARDINAL" "DATE") :test #'string=)
         collect (first ne-result)))
 
+;; This function returns multiple values for storing in transient structures.
 (defun dependency-string-append-named-entities (dependency-tree)
   (let* ((utterance (nlp-tools:dp-build-utterance-from-dependency-tree dependency-tree))
          (named-entities (get-penelope-named-entities-without-cardinals utterance)))
@@ -109,7 +119,7 @@
           do (setf dependency-tree (nlp-tools::dp-combine-tokens-in-dependency-analysis
                                     (split-sequence::split-sequence #\Space named-entity)
                                     dependency-tree named-entity))
-          finally (return dependency-tree))))
+          finally (return (values dependency-tree :named-entities named-entities)))))
 
 (defun check-for-chunk (string dependencies &optional string-so-far)
   "If the de-render chunked some strings, we take the last word as its main category."
