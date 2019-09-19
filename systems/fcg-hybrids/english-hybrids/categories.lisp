@@ -40,7 +40,8 @@
         ;; ---------------------------------------------------------------
         (clause ()
                 (referent ?ref)
-                (syn-cat ((is-matrix-clause ?plus-or-minus))))
+                (syn-cat ((is-matrix-clause ?plus-or-minus)
+                          (clause-type ?clause-type))))
         (matrix-clause (clause)
                        (syn-cat ((is-matrix-clause +))))
         (subclause (clause)
