@@ -39,7 +39,8 @@
                                                  :cxn-inventory cxn-inventory)))
       (loop for key-and-value in keys-and-values
             do ;; store the information in the transient structure.
-            (set-data (blackboard basic-transient-structure) (first key-and-value) (second key-and-value)))
+            (set-data basic-transient-structure (first key-and-value) (second key-and-value)))
+      (set-data basic-transient-structure :dependency-tree syntactic-analysis)
       (values syntactic-analysis utterance-as-list basic-transient-structure))))
 
 ;;; Some examples of preprocessing functions working on a dependency analysis.
@@ -104,6 +105,12 @@
         unless (string= "CARDINAL" (second ne-result))
         collect (first ne-result)))
 
+(defun get-penelope-named-entities-for-beng (sentence)
+  "Return the named entities but not the cardinals."
+  (loop for ne-result in (nlp-tools::get-penelope-named-entities sentence)
+        unless (string= "CARDINAL" (second ne-result))
+        collect ne-result))
+
 (defun get-penelope-named-entities-without-cardinals-and-dates (sentence)
   "Return the named entities but not the cardinals."
   (loop for ne-result in (nlp-tools::get-penelope-named-entities sentence)
@@ -113,13 +120,14 @@
 ;; This function returns multiple values for storing in transient structures.
 (defun dependency-string-append-named-entities (dependency-tree)
   (let* ((utterance (nlp-tools:dp-build-utterance-from-dependency-tree dependency-tree))
-         (named-entities (get-penelope-named-entities-without-cardinals utterance)))
+         (named-entities-result (get-penelope-named-entities-for-beng utterance))
+         (named-entities (mapcar #'first named-entities-result)))
     (loop for named-entity in named-entities
           when (find #\space named-entity) ;; Composed of multiple parts.
           do (setf dependency-tree (nlp-tools::dp-combine-tokens-in-dependency-analysis
                                     (split-sequence::split-sequence #\Space named-entity)
                                     dependency-tree named-entity))
-          finally (return (values dependency-tree :named-entities named-entities)))))
+          finally (return (values dependency-tree :named-entities named-entities-result)))))
 
 (defun check-for-chunk (string dependencies &optional string-so-far)
   "If the de-render chunked some strings, we take the last word as its main category."
