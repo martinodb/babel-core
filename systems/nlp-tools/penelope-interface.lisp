@@ -26,6 +26,7 @@
           get-penelope-pos-tags
           run-penelope-dependency-parser
           get-penelope-dependency-analysis
+          get-penelope-dependency-analyses
           get-penelope-tokens
           get-penelope-sentence-tokens
           get-penelope-text-tokens
@@ -220,9 +221,11 @@ of strings, each list corresponding to a named entity."
 (defun get-penelope-dependency-analysis (utterance &key (model "en"))
   "Returns a dependency tree analysis."
   (rest (assoc :tree (first (rest (assoc :dependencies (run-penelope-dependency-parser utterance :model model)))))))
-
 ;;(get-penelope-dependency-analysis "April is the fourth month of the year")
 
+(defun get-penelope-dependency-analyses (utterances &key (model "en"))
+  "Returns dependency tree analyses of text consisting of multiple sentences."
+  (rest (assoc :dependencies (run-penelope-dependency-parser utterances :model model))))
 
 ;; Word embeddings ;;
 ;;;;;;;;;;;;;;;;;;;;;

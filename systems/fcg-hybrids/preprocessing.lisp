@@ -103,7 +103,7 @@
 
 (defun dependency-string-append-named-entities (dependency-tree)
   (let* ((utterance (nlp-tools:dp-build-utterance-from-dependency-tree dependency-tree))
-         (named-entities (get-penelope-named-entities-without-cardinals-and-dates utterance)))
+         (named-entities (get-penelope-named-entities-without-cardinals utterance)))
     (loop for named-entity in named-entities
           when (find #\space named-entity) ;; Composed of multiple parts.
           do (setf dependency-tree (nlp-tools::dp-combine-tokens-in-dependency-analysis
