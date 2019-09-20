@@ -75,7 +75,7 @@
                            ("npadvmod" functional nominal adverbial "NP as adverbial modifier.")
                            ;; Coordination-related modifiers.
                            ("conj" ignoreable nominal conjunt "Conjunct dependent, e.g. John, Mary and Sam")
-                           ("cc"  conjunction conjunction "Coordinating conjunction.")
+                           ("cc"  lexical conjunction "Coordinating conjunction.")
                            ("preconj" conjunction conjunction conjunction "Pre-correlative conjunction.")
                            ;; NP-modifiers.
                            ("nmod" lexical nominal modifier "Unclassified modifier of the head noun.")

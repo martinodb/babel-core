@@ -139,6 +139,13 @@
                                 when (and (= (word-dependency-spec-head-id spec) head-word-id)
                                           (string= "conj" (word-dependency-spec-syn-role spec)))
                                 collect spec))
+         (conjunctors (loop for spec in word-specs
+                            when (and (= (word-dependency-spec-head-id spec) head-word-id)
+                                      (string= "cc" (word-dependency-spec-syn-role spec)))
+                            collect (progn (push (word-dependency-spec-unit-name spec) constituents)
+                                      `(,(word-dependency-spec-unit-name spec)
+                                        (parent ,(unit-name mother-unit))
+                                        (syn-cat ((lex-class conjunctor)))))))
          (units-to-append (loop for other-conjunct in (cons head-word-spec other-conjuncts)
                                 for phrase-unit-name = (make-const "conj")
                                 do (push phrase-unit-name constituents)
@@ -146,10 +153,10 @@
                                                                word-specs preprocessed-units))))
     (cons `(,(unit-name mother-unit)
             ,@(loop for feature in (unit-body mother-unit)
-                    collect (if (eql 'constituents (feature-name feature))
-                              `(constituents ,constituents)
-                              feature)))
-          units-to-append)))
+                            collect (if (eql 'constituents (feature-name feature))
+                                      `(constituents ,constituents)
+                                      feature)))
+          (append conjunctors units-to-append))))
 ;; (comprehend "I like Mickey Mouse and Donald Duck.")
 
 ;;;;; ----------------------------------------------------------------------------------------------------------------------
