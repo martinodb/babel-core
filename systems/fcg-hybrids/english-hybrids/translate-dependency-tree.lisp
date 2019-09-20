@@ -158,6 +158,7 @@
                                       feature)))
           (append conjunctors units-to-append))))
 ;; (comprehend "I like Mickey Mouse and Donald Duck.")
+;; (comprehend "Do you prefer Mickey Mouse, Donald Duck or Goofy?")
 
 ;;;;; ----------------------------------------------------------------------------------------------------------------------
 ;;;;; CLAUSAL units
