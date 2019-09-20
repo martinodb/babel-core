@@ -188,6 +188,36 @@
         unless (string= "punct" (rest (assoc :DEPENDENCY dependent)))
         collect dependent))
 
+;; dependency-promote-conjuncts
+;; -----------------------------------------------------------------------
+(export '(dependency-promote-conjuncts))
+
+(defun climb-to-first-conjunct (id dependency-tree)
+  (dolist (x dependency-tree)
+    (let ((node-id (rest (assoc :node--id x))))
+      (when (string= id node-id)
+        (let ((head-id (format nil "~a" (rest (assoc :head--id x)))))
+          (if (member (rest (assoc :dependency x)) '("conj" "cc") :test #'string=)
+            (return (climb-to-first-conjunct head-id dependency-tree))
+            (return (values (parse-integer head-id) (rest (assoc :node--id x))))))))))
+
+(defun dependency-promote-conjuncts (dependency-tree)
+  "Treat conjuncts as items on the same level."
+  (let ((ids-to-be-expanded nil))
+    (reverse (loop for dependent in (reverse dependency-tree)
+                   collect (cond ((member (rest (assoc :dependency dependent)) '("conj" "cc") :test #'string=)
+                                  (let ((old-head-spec (assoc :head--id dependent)))
+                                    (multiple-value-bind (the-head the-node)
+                                        (climb-to-first-conjunct (format nil "~a" (rest old-head-spec))
+                                                                 dependency-tree)
+                                      (pushnew the-node ids-to-be-expanded :test #'string=)
+                                      (substitute `(:head--id . ,the-head) old-head-spec dependent :test #'equal))))
+                                 ((member (rest (assoc :node--id dependent)) ids-to-be-expanded :test #'string=)
+                                  (append dependent `(:first-conjunct)))
+                                 (t
+                                  dependent))))))
+
+
 ;; Compare:
 ;; --------
 ;; (preprocess-using-dependency-tree "I saw Barack Obama" :preprocessing-steps (list #'dependency-string-append-named-entities))

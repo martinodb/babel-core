@@ -20,9 +20,10 @@
 ;;; -------------------------------------------------------------------------------------
 (export '(word-dependency-spec
           word-dependency-spec-string word-dependency-spec-syn-role word-dependency-spec-unit-name
-          word-dependency-spec-pos-tag word-dependency-spec-node-id word-dependency-spec-head-id))
+          word-dependency-spec-pos-tag word-dependency-spec-node-id word-dependency-spec-head-id
+          word-dependency-spec-conjunct-type))
 
-(defstruct word-dependency-spec string syn-role unit-name pos-tag node-id head-id)
+(defstruct word-dependency-spec string syn-role unit-name pos-tag node-id head-id conjunct-type)
 
 ;;; Helper functions.
 ;;; -------------------------------------------------------------------------------------

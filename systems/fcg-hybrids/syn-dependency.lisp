@@ -41,7 +41,10 @@
                                            :pos-tag (nlp-tools::dp-get-tag dependency)
                                            :node-id (parse-integer
                                                      (nlp-tools::dp-get-node-id dependency))
-                                           :head-id (nlp-tools::dp-get-head-id dependency))))
+                                           :head-id (nlp-tools::dp-get-head-id dependency)
+                                           :conjunct-type (loop for x in dependency
+                                                                when (eql x :first-conjunct)
+                                                                return t))))
 
 (defmethod translate-dependency-tree ((base-transient-structure coupled-feature-structure)
                                       (dependency-tree list)

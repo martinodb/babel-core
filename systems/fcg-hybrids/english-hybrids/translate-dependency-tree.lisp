@@ -129,6 +129,29 @@
                                                                          (parent ,parent-name)))))))
               subunits)))
 
+(defun handle-functional-conjuncts (function head-word-spec unit-name parent-name word-specs &optional preprocessed-units)
+  "Handle conjuncts."
+  (let* ((starter-units (handle-functional-unit function head-word-spec unit-name parent-name word-specs preprocessed-units))
+         (mother-unit (assoc unit-name starter-units))
+         (head-word-id (word-dependency-spec-head-id head-word-spec))
+         (constituents nil)
+         (other-conjuncts (loop for spec in word-specs
+                                when (and (= (word-dependency-spec-head-id spec) head-word-id)
+                                          (string= "conj" (word-dependency-spec-syn-role spec)))
+                                collect spec))
+         (units-to-append (loop for other-conjunct in (cons head-word-spec other-conjuncts)
+                                for phrase-unit-name = (make-const "conj")
+                                do (push phrase-unit-name constituents)
+                                append (handle-functional-unit function other-conjunct phrase-unit-name (unit-name mother-unit)
+                                                               word-specs preprocessed-units))))
+    (cons `(,(unit-name mother-unit)
+            ,@(loop for feature in (unit-body mother-unit)
+                    collect (if (eql 'constituents (feature-name feature))
+                              `(constituents ,constituents)
+                              feature)))
+          units-to-append)))
+;; (comprehend "I like Mickey Mouse and Donald Duck.")
+
 ;;;;; ----------------------------------------------------------------------------------------------------------------------
 ;;;;; CLAUSAL units
 ;;;;; ----------------------------------------------------------------------------------------------------------------------
@@ -216,14 +239,20 @@
                                                           (first (push (make-const function)
                                                                        other-functional-unit-names)))))
                                  when unit-name
-                                 append (if (clausal-dependent-p function)
-                                          (handle-verbal-root word-spec
-                                                              word-specs
-                                                              (if (subject-p function)
-                                                                'clausal-subject 'subclause)
-                                                              clause-unit-name unit-name preprocessed-units)
-                                          (handle-functional-unit
-                                           function word-spec unit-name clause-unit-name word-specs preprocessed-units))))
+                                 append (cond ((clausal-dependent-p function)
+                                               (handle-verbal-root word-spec
+                                                                   word-specs
+                                                                   (if (subject-p function)
+                                                                     'clausal-subject 'subclause)
+                                                                   clause-unit-name unit-name preprocessed-units))
+                                              ((word-dependency-spec-conjunct-type word-spec)
+                                               (handle-functional-conjuncts function word-spec unit-name
+                                                                            clause-unit-name word-specs
+                                                                            preprocessed-units))
+                                              (t
+                                               (handle-functional-unit
+                                                function word-spec unit-name
+                                                clause-unit-name word-specs preprocessed-units)))))
          (clause-subunits (append (listify subject-unit-name)
                                   (listify object-unit-name)
                                   (listify dative-unit-name)
@@ -234,31 +263,17 @@
                ,@(find-all-features-for-category clause-type *english-grammar-categories*
                                                  :features-so-far `((constituents ,clause-subunits)
                                                                     (parent ,parent))))
-                                                                    ;(functional-structure
-                                                                    ; (,@(when subject-unit-name
-                                                                    ;      `((subject ,subject-unit-name)))
-                                                                    ;  ,@(when object-unit-name
-                                                                    ;      `((object ,object-unit-name)))
-                                                                    ;  ,@(when dative-unit-name
-                                                                    ;      `((dative ,dative-unit-name))))))))
               ;; The VP and its subunits.
               (,vp-unit-name
                ,@(find-all-features-for-category
                   'VP *english-grammar-categories*
                   :features-so-far `((constituents ,verb-unit-names)
                                      (parent ,clause-unit-name)
-                                     ;(functional-structure
-                                     ; (,@(when subject-unit-name
-                                     ;      `((subject ,subject-unit-name)))
-                                     ;  ,@(when object-unit-name
-                                     ;      `((object ,object-unit-name)))
-                                     ;  ,@(when dative-unit-name
-                                     ;      `((dative ,dative-unit-name)))))
                                      (head ,(word-dependency-spec-unit-name root-spec))))))
             verb-units
             ;; The functional units.
             functional-units)))
-;; (comprehend "I see Mickey Mouse")
+;; (comprehend "I see Mickey Mouse and Donald Duck.")
 
 (defun nominal-phrase-p (unit)
   (find '(phrase-type NP) (unit-feature-value unit 'syn-cat) :test #'unify))
