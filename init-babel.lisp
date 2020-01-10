@@ -51,8 +51,8 @@
 (format t "~&~%* Initializing BABEL.")
 (format t "~%  The BABEL path is: ~a" (directory-namestring *babel-path*))
 
-;; put's the feature :hunchentoot-available-on-this-platform on
-;; *features* except in some cases
+;; Puts the feature :hunchentoot-available-on-this-platform on
+;; *features* except in some cases.
 (eval-when (:compile-toplevel :load-toplevel :execute)
   (when (or (and (find :sbcl *features*) (find :sb-thread *features*))
 	    (find :cmucl *features*)
