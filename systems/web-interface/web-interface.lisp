@@ -115,7 +115,7 @@
 (defun start-web-interface (&key (port *port*) (address *address*))
   (if *my-server* 
       (format t "~% ***** web interface already running at http://~a:~d *****~%"
-              *address* *port*)
+              address port)
       (progn
 	(setf *my-server* 
               (start (make-instance 'easy-acceptor 
@@ -126,7 +126,7 @@
                                     :message-log-destination nil
                                     :access-log-destination nil)))
 	(format t "~% ***** started web interface at http://~a:~d *****~%"
-                *address* *port*))))
+                address port))))
   
 ;; automatically start the server when the asdf system is loaded
 (when (and cl-user::*automatically-start-web-interface*
