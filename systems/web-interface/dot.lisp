@@ -103,6 +103,7 @@
    and returns the resulting svg xml expression."
   (pipe-through (input output "dot" "-Tsvg")
     (s-dot:s-dot->dot input s-dot-expression)
+    (force-output input)
     (unless (eq input output) (close input))
     (let ((lines nil) (line nil))
       (loop do (setf line (read-line output nil))

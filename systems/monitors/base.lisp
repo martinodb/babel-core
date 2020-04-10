@@ -297,23 +297,14 @@
                    year month day hour min sec))
 	 (string-downcase experiment-class)
 	 "-" (pathname-name file-name) "." (pathname-type file-name)))
-#+sbcl
+
 (defun make-file-name-with-job-and-task-id (file-name experiment-class)
   "A helper function for making file-names that contain the time and the experiment class"
   (mkstr (make-pathname :directory (pathname-directory file-name))
- 	 (format nil "~a-~a-" (sb-unix::posix-getenv "SLURM_ARRAY_JOB_ID")
-                 (sb-unix::posix-getenv "SLURM_ARRAY_TASK_ID"))
+ 	 (format nil "~a-~a-" (uiop/os:getenv "SLURM_ARRAY_JOB_ID")
+                 (uiop/os:getenv "SLURM_ARRAY_TASK_ID"))
 	 (string-downcase experiment-class)
  	 "-" (pathname-name file-name) "." (pathname-type file-name)))
-
-#+(or lispworks ccl)
-(defun make-file-name-with-job-and-task-id (file-name experiment-class)
-  "A helper function for making file-names that contain the time and the experiment class"
-  (mkstr (make-pathname :directory (pathname-directory file-name))
- 	 (format nil "~a-~a-" (ccl::getenv "SLURM_ARRAY_JOB_ID")
-                (ccl::getenv "SLURM_ARRAY_TASK_ID"))
-	 (string-downcase experiment-class)
-         "-" (pathname-name file-name) "." (pathname-type file-name)))
 
 (defun make-file-name-with-time (file-name)
   "A helper function for making file-names that contain the time"
@@ -323,12 +314,3 @@
 	   (format nil "~d-~2,'0d-~2,'0d-~2,'0d-~2,'0d-~2,'0d-"
                    year month day hour min sec))
 	 (pathname-name file-name) "." (pathname-type file-name)))
-
-;; #+sbcl
-;; (defun make-file-name-with-job-and-task-id (file-name experiment-class)
-;;   "A helper function for making file-names that contain the time and the experiment class"
-;;   (mkstr (make-pathname :directory (pathname-directory file-name))
-;; 	 (format nil "~a-~a-" (sb-unix::posix-getenv "SLURM_ARRAY_JOB_ID")
-;;                  (sb-unix::posix-getenv "SLURM_ARRAY_TASK_ID"))
-;; 	 (string-downcase experiment-class)
-;; 	 "-" (pathname-name file-name) "." (pathname-type file-name)))
