@@ -17,7 +17,7 @@
 
 (defsystem :nlp-tools
   :description "A system loading the NLP tools for Babel2"
-  :depends-on (:utils :cl-json :cl-json-shell :dexador)
+  :depends-on (:utils :cl-json #+lispworks :drakma #-lispworks dexador)
   :components 
   ((:file "package")
    (:file "penelope-interface")

@@ -6,7 +6,7 @@
 [subrepo]
 	remote = gitlab@gitlab.ai.vub.ac.be:ehai/nlp-tools.git
 	branch = master
-	commit = aa0cf833dbbdde972bd8eae3f0bc14763dd927d6
+	commit = bb3229c760a8f1afdd81b60d5df821907d444643
 	parent = 1735e8512c1f7ed6e5a438baa008d38ed55bdb79
 	method = merge
 	cmdver = 0.4.0
