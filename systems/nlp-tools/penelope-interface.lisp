@@ -61,8 +61,9 @@
                                         :method :post
                                         :content-type "application/json"
                                         :content json)))
-    (when response (cl-json:decode-json-from-string response))))
-
+    (when response (handler-case (cl-json:decode-json-from-string response)
+                     (error (e)
+                       (format t "Error in response from spacy API service [nlp-tools penelope-interface]: ~S.~&" e))))))
 #-lispworks
 (defun send-request (route json &key (host *penelope-host*))
   "Send curl request and returns the answer."
@@ -70,7 +71,9 @@
          (response (dex:post url
                              :headers '((Content-Type . "application/json"))
                              :content json)))
-    (when response (cl-json:decode-json-from-string response))))
+    (when response (handler-case (cl-json:decode-json-from-string response)
+                     (error (e)
+                       (format t "Error in response from spacy API service [nlp-tools penelope-interface]: ~S.~&" e))))))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;
@@ -228,22 +231,25 @@ of strings, each list corresponding to a named entity."
 ;; Constituency and Dependency parsing ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defun run-penelope-syntactic-parser (sentence &key (model "en"))
+(defun run-penelope-syntactic-parser (sentence &key (model "en_benepar"))
   "Call the penelope server to get the dependency and constituency structure of a sentence."
-  (unless (stringp sentence)
-    (error "The function <run-penelope-dependency-parser> expects a string as input"))
+  (unless (or (stringp sentence)
+              (listp sentence))
+    (error "The function <run-penelope-dependency-parser> expects a string or a list as input"))
   (send-request "/syntactic-parser"
-             (encode-json-to-string `((:sentence . ,(remove-multiple-spaces sentence))
+             (encode-json-to-string `((:sentence . ,(if (stringp sentence)
+                                                      (remove-multiple-spaces sentence)
+                                                      sentence))
                                       (:model . ,model)))))
 
 ;; (run-penelope-syntactic-parser "April is the fourth month of the year")
 
-(defun get-penelope-syntactic-analysis (utterance &key (model "en"))
+(defun get-penelope-syntactic-analysis (utterance &key (model "en_benepar"))
   "Returns a syntacic tree analysis in the form of constituents and dependents."
    (rest (assoc :tree (first (rest (assoc :trees (run-penelope-syntactic-parser utterance :model model)))))))
 
 ;;(get-penelope-syntactic-analysis "April is the fourth month of the year")
-
+;;(get-penelope-syntactic-analysis '("April" "is" "the" "fourth" "month" "of" "the" "year"))
 
 ;; Word embeddings ;;
 ;;;;;;;;;;;;;;;;;;;;;
