@@ -55,17 +55,18 @@
 
 (defmethod initialize-instance :after ((cip construction-inventory-processor) &key)
   (let* ((fcg-2 (not (original-cxn-set (construction-inventory cip)))) ;; if there's no original-cxn-set, it's old FCG
-        (top-node
-         (make-instance 'cip-node
-                        :construction-inventory (construction-inventory cip)
-                        :statuses '(initial)
-                        :car (make-cxn-application-result 
-                              :source-cfs (initial-cfs cip)
-                              :direction (direction cip)
-                              :resulting-cfs (initial-cfs cip))
-                        :cip cip :created-at 0
-                        :diagnostics (unless fcg-2 (diagnostics (original-cxn-set (construction-inventory cip))))
-                        :repairs (unless fcg-2 (repairs (original-cxn-set (construction-inventory cip)))))))
+         (top-node
+          (make-instance 'cip-node
+                         :construction-inventory (construction-inventory cip)
+                         :statuses '(initial)
+                         :car (make-cxn-application-result 
+                               :source-cfs (initial-cfs cip)
+                               :direction (direction cip)
+                               :resulting-cfs (initial-cfs cip))
+                         :cip cip :created-at 0
+                         :priority 1.0
+                         :diagnostics (unless fcg-2 (diagnostics (original-cxn-set (construction-inventory cip))))
+                         :repairs (unless fcg-2 (repairs (original-cxn-set (construction-inventory cip)))))))
     (setf (top-node cip) top-node)
     (setf (queue cip) (list top-node))))
 
