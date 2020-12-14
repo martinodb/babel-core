@@ -132,7 +132,7 @@ is overwritten."
   (set-configuration (visualization-configuration construction-inventory) :hide-features '(footprints) :replace nil)
   (set-configuration (visualization-configuration construction-inventory) :selected-hierarchy 'subunits :replace nil)
   (set-configuration (visualization-configuration construction-inventory) :select-subfeatures nil :replace nil)
-  (set-configuration (visualization-configuration construction-inventory) :with-search-debug-data nil :replace nil)
+  (set-configuration (visualization-configuration construction-inventory) :with-search-debug-data t :replace nil)
   (set-configuration (visualization-configuration construction-inventory) :show-upper-menu nil :replace nil)
   (set-configuration (visualization-configuration construction-inventory) :remove-empty-units nil :replace nil)
   (set-configuration (visualization-configuration construction-inventory) :add-form-and-meaning-to-car t :replace nil)
