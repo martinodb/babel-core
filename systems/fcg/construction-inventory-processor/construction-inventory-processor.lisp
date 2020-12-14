@@ -594,7 +594,9 @@ solution."
 	last-node
 	(first (last (get-cip-leaves cip))))))
 
-(defun next-cip-solution (cip &key (notify t))
+(defgeneric next-cip-solution (cip &key notify))
+
+(defmethod next-cip-solution ((cip construction-inventory-processor) &key (notify t))
   "runs the construction inventory application search process until
    the next solution is found"
   (when notify (notify cip-started cip))
