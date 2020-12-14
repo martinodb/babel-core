@@ -31,7 +31,8 @@
           iota
           log-transform-vector
           sum-list-of-vectors
-          random-from-range))
+          random-from-range
+          normalize))
 
 (declaim (inline sum))
 (defun sum (values)
@@ -239,9 +240,7 @@ coefficient equal to r**2."
   "Generate a random integer/float in the range [start,end["
   (+ start (random (- end start))))
 
-;;;
-;;; stuff not used
-
-;; (defun iota (n &optional (start-at 0))
-;;   "Return a list of n consecutive integers, by default starting at 0."
-;;   (if (<= n 0) nil (cons start-at (iota (- n 1) (+ start-at 1)))))
+(defun normalize (x min-x max-x)
+  "Normalizes x between 0 and 1."
+  (float (/ (- x min-x)
+            (- max-x min-x))))
