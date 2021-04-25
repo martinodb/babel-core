@@ -12,9 +12,12 @@ The core packages of Babel, jointly developed by Sony Computer Science Laborator
 
 # _Useful links_
 
-* [Babel Toolkit website](https://emergent-languages.org/)
 * [Gitlab repository](https://gitlab.ai.vub.ac.be/ehai/babel-core)
 * [Outdated Github repo](https://github.com/dwarfmaster/Babel2)
-* To test it, open SBCL and [follow these instructions:](https://github.com/martinodb/babel-core/blob/master/test-babel-installation.lisp)
-* The manual is [in the Gitlab repo](https://emergent-languages.org/assets/pdfs/Babel2_Manual.pdf) and I added it [here](https://github.com/martinodb/babel-core/blob/martinodb-main/Babel2_Manual.pdf)
-* [Basics of FCG](https://www.fcg-net.org/wp-content/uploads/papers/basics-of-fcg.pdf)
+* To test Babel, open SBCL and [follow these instructions:](https://github.com/martinodb/babel-core/blob/master/test-babel-installation.lisp)
+* [Babel Toolkit website](https://emergent-languages.org/)
+ * [Babel2 manual](https://emergent-languages.org/assets/pdfs/Babel2_Manual.pdf), I added it [here](https://github.com/martinodb/babel-core/blob/martinodb-main/Babel2_Manual.pdf)
+ * [A Practical Guide to Studying Emergent Communication through Grounded Language Games](https://emergent-languages.org/assets/pdfs/babel-toolkit.pdf)
+* [FCG website](https://www.fcg-net.org)
+ * [Basics of FCG](https://www.fcg-net.org/wp-content/uploads/papers/basics-of-fcg.pdf), I added it [here](https://github.com/martinodb/babel-core/blob/martinodb-main/basics-of-fcg.pdf)
+
