@@ -16,7 +16,7 @@ The core packages of Babel, jointly developed by Sony Computer Science Laborator
 * [Outdated Github repo](https://github.com/dwarfmaster/Babel2)
 * To test Babel, open SBCL and [follow these instructions:](https://github.com/martinodb/babel-core/blob/master/test-babel-installation.lisp)
 * [Babel Toolkit website](https://emergent-languages.org/)
-   * [Babel2 manual](https://emergent-languages.org/assets/pdfs/Babel2_Manual.pdf), I added it [here](https://github.com/martinodb/babel-core/blob/martinodb-main/Babel2_Manual.pdf)
+   * [Babel2 manual](https://emergent-languages.org/assets/pdfs/Babel2_Manual.pdf), I added it [here](https://github.com/martinodb/babel-core/blob/martinodb-main/Babel2_Manual.pdf). Note: it seems outdated.
    * [A Practical Guide to Studying Emergent Communication through Grounded Language Games](https://emergent-languages.org/assets/pdfs/babel-toolkit.pdf)
 * [FCG website](https://www.fcg-net.org)
    * [Basics of FCG](https://www.fcg-net.org/wp-content/uploads/papers/basics-of-fcg.pdf), I added it [here](https://github.com/martinodb/babel-core/blob/martinodb-main/basics-of-fcg.pdf)
