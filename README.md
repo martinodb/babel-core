@@ -14,7 +14,8 @@ The core packages of Babel, jointly developed by Sony Computer Science Laborator
 
 * [Gitlab repository](https://gitlab.ai.vub.ac.be/ehai/babel-core)
 * [Outdated Github repo](https://github.com/dwarfmaster/Babel2)
-* To test Babel, open SBCL and [follow these instructions:](https://github.com/martinodb/babel-core/blob/master/test-babel-installation.lisp)
+   * In particular, see the [tutorial directory](https://github.com/dwarfmaster/Babel2/tree/master/tutorial), starting with [nlp-tools-tutorial.lisp](https://github.com/dwarfmaster/Babel2/blob/master/tutorial/nlp-tools-tutorial.lisp). This was removed from the Gitlab repo for some reason. The `nlp-tools-tutorial` examples work, except for `get-penelope-pos-tags` and `run-penelope-dependency-parser`.
+* To test Babel, open SBCL and [follow these instructions:](https://github.com/martinodb/babel-core/blob/master/test-babel-installation.lisp). Also see the `nlp-tools-tutorial`mentioned above.
 * [Babel Toolkit website](https://emergent-languages.org/)
    * [Babel2 manual](https://emergent-languages.org/assets/pdfs/Babel2_Manual.pdf), I added it [here](https://github.com/martinodb/babel-core/blob/martinodb-main/Babel2_Manual.pdf). Note: it seems outdated.
    * [A Practical Guide to Studying Emergent Communication through Grounded Language Games](https://emergent-languages.org/assets/pdfs/babel-toolkit.pdf)
