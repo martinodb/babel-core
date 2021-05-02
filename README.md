@@ -18,8 +18,10 @@ Note: I have no connection with the Babel dev team, I'm just mirroring their ope
 
 * [Gitlab repository](https://gitlab.ai.vub.ac.be/ehai/babel-core)
 * [Outdated Github repo](https://github.com/dwarfmaster/Babel2)
-   * In particular, see the [tutorial directory](https://github.com/dwarfmaster/Babel2/tree/master/tutorial), starting with [nlp-tools-tutorial.lisp](https://github.com/dwarfmaster/Babel2/blob/master/tutorial/nlp-tools-tutorial.lisp). This was removed from the Gitlab repo for some reason. The `nlp-tools-tutorial` examples work, except for `get-penelope-pos-tags` and `run-penelope-dependency-parser`.
-* To test Babel, open SBCL and [follow these instructions:](https://github.com/martinodb/babel-core/blob/master/test-babel-installation.lisp). Also see the `nlp-tools-tutorial`mentioned above.
+   * In particular, see the [tutorial directory](https://github.com/dwarfmaster/Babel2/tree/master/tutorial), which was removed from the Gitlab repo for some reason.
+     * Start with [nlp-tools-tutorial.lisp](https://github.com/dwarfmaster/Babel2/blob/master/tutorial/nlp-tools-tutorial.lisp). These examples work, except for `get-penelope-pos-tags` and `run-penelope-dependency-parser`.
+     * Then see what's in [the fcg manual directory](https://github.com/dwarfmaster/Babel2/tree/master/tutorial/fcg-manual), especially [fcg-manual.lisp](https://github.com/dwarfmaster/Babel2/blob/master/tutorial/fcg-manual/fcg-manual.lisp) and [evaluation-tutorial.lisp](https://github.com/dwarfmaster/Babel2/blob/master/tutorial/fcg-manual/evaluation-tutorial.lisp). But I haven't tested those yet.
+* To test Babel, open SBCL and [follow these instructions:](https://github.com/martinodb/babel-core/blob/master/test-babel-installation.lisp). Also see the lisp files in the [tutorial directory](https://github.com/dwarfmaster/Babel2/tree/master/tutorial) as described above. I haven't incorporated the tutorial directory into this repo yet because I want to keep a pristine upstream codebase (from the Gitlab repo) at least until I get a chance to test those examples.
 * [Babel Toolkit website](https://emergent-languages.org/)
    * [Babel2 manual](https://emergent-languages.org/assets/pdfs/Babel2_Manual.pdf), I added it [here](https://github.com/martinodb/babel-core/blob/martinodb-main/Babel2_Manual.pdf). Note: it seems outdated.
    * [A Practical Guide to Studying Emergent Communication through Grounded Language Games](https://emergent-languages.org/assets/pdfs/babel-toolkit.pdf)
